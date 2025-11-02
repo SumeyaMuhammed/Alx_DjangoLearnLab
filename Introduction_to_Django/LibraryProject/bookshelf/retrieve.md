@@ -3,7 +3,7 @@
 # Import Book model
 >>> from bookshelf.models import Book
 # Create new instance of book
->>> Book.objects.all()
+>>> Book.objects.get(title = '1984')
 # Result:
-<QuerySet [<Book: Book object (1)>]>
+<Book: Book object (1)>
 ```
