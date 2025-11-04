@@ -31,5 +31,5 @@ class Course(models.Model):
 
 employees = Employee.objects.select_related('department')
 products = Description.objects.select_related('product')
-students = Course.objects.prefetch_related('student')
-Courses = Course.objects.prefetch_related('courses')
+students = Student.objects.prefetch_related('courses')
+courses = Course.objects.prefetch_related('student')
