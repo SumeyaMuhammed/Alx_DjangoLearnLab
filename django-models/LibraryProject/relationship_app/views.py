@@ -4,7 +4,7 @@ from .models import Library
 from django.views.generic.detail import DetailView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import user_passes_test, permission_required
 from .admin_view import is_admin
 from .member_view import is_member
 from .librarian_view import is_librarian
@@ -46,3 +46,24 @@ def librarian_dashboard(request):
 @user_passes_test(is_member)
 def member_dashboard(request):
   return render(request, 'relationship_app/member_view.html')
+
+@permission_required('relationship_app.add_book', raise_exception=True)
+def add_book(request):
+  book = Book(title = '1984', author = 'George Orwell', published_date = 1949)
+  book.save()
+  return redirect('book-list')
+
+
+
+@permission_required('relationship_app.change_book', raise_exception=True)
+def change_book(request, book_id):
+  book = Book.objects.get(id=book_id)
+  book.title = 'The Art of Being Alone'
+  book.save()
+  return redirect('book-list')
+
+@permission_required('relationship_app.delete_book', raise_exception=True)
+def delete_book(request, book_id):
+  book = Book.objects.get(id=book_id)
+  book.delete()
+  return redirect('book-list')

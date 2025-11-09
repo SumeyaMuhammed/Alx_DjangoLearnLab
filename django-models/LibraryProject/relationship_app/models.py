@@ -13,6 +13,12 @@ class Book(models.Model):
   title = models.CharField(max_length=200)
   author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="author")
 
+  class Meta:
+    permissions_list = [('can_add_book', 'can_add_book'),
+                   ('can_change_book', 'can_change_book'),
+                   ('can_delete_book', 'can_delete_book')]
+    permissions = models.CharField(max_length=200, choices=permissions_list)
+
   def __str__(self):
     return self.name
 
@@ -31,10 +37,14 @@ class Librarian(models.Model):
     return self.name
   
 class UserProfile(models.Model):
-  user = models.OneToOneField(User, on_delete=models.CASCADE, name='user')
+  user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user')
   role = models.CharField(max_length=200, choices=[('Admin','Admin'), 
                                                    ('Librarian','Librarian'), 
                                                    ('Member','Member')])
+  '''
+  First item → stored in the database ('Admin')
+  Second item → shown in forms and admin ('Admin')
+  '''
   
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
