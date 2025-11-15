@@ -8,7 +8,7 @@ class BookAdmin(admin.ModelAdmin):
     list_filter = ('author', 'publication_year')
     search_fields = ('title', 'author')
 
-class userAdmin(admin.ModelAdmin):
+class CustomUserAdmin(admin.ModelAdmin):
   model = CustomUser
   list_display = ("email", "date_of_birth", "profile_photo", "is_staff", "is_superuser", "is_active")
   list_filter = ("is_staff", "is_superuser")
@@ -27,3 +27,4 @@ class userAdmin(admin.ModelAdmin):
         }),
     )
 
+admin.site.register(CustomUser, CustomUserAdmin)"
