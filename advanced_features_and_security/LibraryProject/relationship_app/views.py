@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Book
+from .models import Book, CustomUser
 from .models import Library
 from django.views.generic.detail import DetailView
 from django.contrib.auth.forms import UserCreationForm
@@ -26,13 +26,13 @@ class LibraryDetailView(DetailView):
 #  User Authentication Views
 def register(request):
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
+        form = UserCreationForm(CustomUser(request.POST))
         if form.is_valid():
             user = form.save()
             login(request, user)
             return redirect("member-dashboard")
     else:
-        form = UserCreationForm()
+        form = UserCreationForm(CustomUser)
 
     return render(request, "relationship_app/register.html", {"form": form})
 
