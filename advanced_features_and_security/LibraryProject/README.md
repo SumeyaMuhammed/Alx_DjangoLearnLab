@@ -1,0 +1,3 @@
+## Introduction to Django Development Environment Setup
+
+The exercise involved setting up a Django development environment by installing Django and creating a project named LibraryProject. The development server was run to verify the setup, and the project structure was explored, focusing on key files such as settings.py, urls.py, and manage.py to understand their roles in configuring and managing a Django application.
