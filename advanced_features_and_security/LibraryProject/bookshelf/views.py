@@ -2,6 +2,17 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Article
+from django.shortcuts import render, get_object_or_404
+from .models import Book
+
+def book_list(request):
+    books = Book.objects.all()
+    return render(request, "bookshelf/book_list.html", {"books": books})
+
+def books(request, id):
+    book = get_object_or_404(Book, id=id)
+    return render(request, "bookshelf/book_detail.html", {"book": book})
+
 
 @permission_required('advanced_features_and_security.can_view', raise_exception=True)
 def article_list(request):
