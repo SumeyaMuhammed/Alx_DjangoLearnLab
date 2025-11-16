@@ -4,6 +4,16 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Article
 from django.shortcuts import render, get_object_or_404
 from .models import Book
+from .forms import BookSearchForm  
+
+def search_books(request):
+    form = BookSearchForm(request.GET or None)
+    books = None
+    if form.is_valid():
+        query = form.cleaned_data['query']
+        books = Book.objects.filter(title__icontains=query)
+    return render(request, 'bookshelf/book_search.html', {'form': form, 'books': books})
+
 
 def book_list(request):
     books = Book.objects.all()
