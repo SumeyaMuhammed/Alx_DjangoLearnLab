@@ -78,7 +78,6 @@ CONTENT_SECURITY_POLICY = {
         "style-src": ["'self'"],
         "img-src": ["'self'", "data:"],
         "frame-ancestors": ["'none'"],
-,
     }
 }
 
