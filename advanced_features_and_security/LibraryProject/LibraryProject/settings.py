@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-f)$8@v*svk$-e(ce!(_hn+osl*j3j=#8a88r851&sg8ui44pc=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = [Library.com]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -73,11 +73,12 @@ TEMPLATES = [
 
 CONTENT_SECURITY_POLICY = {
     "DIRECTIVES": {
-        "default-src": [SELF],
-        "script-src": [SELF],
-        "style-src": [SELF],
-        "img-src": [SELF, "data:"],
-        "frame-ancestors": [NONE],
+        "default-src": ["'self'"],
+        "script-src": ["'self'"],
+        "style-src": ["'self'"],
+        "img-src": ["'self'", "data:"],
+        "frame-ancestors": ["'none'"],
+,
     }
 }
 
@@ -167,3 +168,5 @@ SECURE_HSTS_SECONDS = 31536000  # 1 year
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
+# Trust the X-Forwarded-Proto header set by your proxy (needed for HTTPS redirects)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
