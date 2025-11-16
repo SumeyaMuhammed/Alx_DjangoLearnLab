@@ -9,8 +9,35 @@ class Book(models.Model):
     author = models.CharField(max_length=100)
     publication_year = models.IntegerField()
 
+    class Meta:
+       permissions = [('can_view', 'can_view'),
+                      ('can_create', 'can_create'),
+                      ('can_edit', 'can_edit'),
+                      ('can_delete ', 'can_delete')]
+
     def __str__(self):
         return self.title
+    
+class Editors(models.Model):
+  name = models.CharField(max_length=200)
+  books = models.ForeignKey(Book, related_name="books")
+
+  def __str__(self):
+    return self.name
+  
+class Viewers(models.Model):
+  name = models.CharField(max_length=200)
+  books = models.ForeignKey(Book, related_name="books")
+
+  def __str__(self):
+    return self.name
+  
+class Admins(models.Model):
+  name = models.CharField(max_length=200)
+  books = models.ForeignKey(Book, related_name="books")
+
+  def __str__(self):
+    return self.name
     
 class CustomUserManager(BaseUserManager):
   def create_user(self, email, date_of_birth, profile_photo, password, **Other_fields):
