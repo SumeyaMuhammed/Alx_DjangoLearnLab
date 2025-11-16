@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from django.utils.csp import CSP
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-f)$8@v*svk$-e(ce!(_hn+osl*j3j=#8a88r851&sg8ui44pc='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [Library.com]
 
 
 # Application definition
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csp.ContentSecurityPolicyMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -63,10 +65,21 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.csp'
             ],
         },
     },
 ]
+
+CONTENT_SECURITY_POLICY = {
+    "DIRECTIVES": {
+        "default-src": [SELF],
+        "script-src": [SELF],
+        "style-src": [SELF],
+        "img-src": [SELF, "data:"],
+        "frame-ancestors": [NONE],
+    }
+}
 
 WSGI_APPLICATION = 'LibraryProject.wsgi.application'
 
@@ -100,6 +113,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+SECURE_CSP = {
+    "default-src": [CSP.SELF],
+    "script-src": [CSP.SELF],
+    "style-src": [CSP.SELF],
+    # You can add more directives, like img-src, font-src, etc.
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
@@ -123,3 +143,27 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
+
+# Secure cookie settings — only send cookies over HTTPS
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+# Other browser protections
+SECURE_BROWSER_XSS_FILTER = True  
+# This adds `X-XSS-Protection: 1; mode=block` header
+
+SECURE_CONTENT_TYPE_NOSNIFF = True  
+# Adds `X-Content-Type-Options: nosniff` header
+
+# Clickjacking protection
+X_FRAME_OPTIONS = 'DENY'  
+# Prevents the site from being embedded in frames
+
+# (Optional but recommended) Force SSL redirect
+SECURE_SSL_REDIRECT = True
+
+# HSTS: tells browsers to only use HTTPS for a period of time
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
