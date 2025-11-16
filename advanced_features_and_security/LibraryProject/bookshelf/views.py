@@ -4,7 +4,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Article
 from django.shortcuts import render, get_object_or_404
 from .models import Book
-from .forms import BookSearchForm, ExampleForm
+from .forms import BookSearchForm
+from .forms import ExampleForm
 
 def search_books(request):
     form = BookSearchForm(request.GET or None)
