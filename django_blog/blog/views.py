@@ -159,7 +159,7 @@ def posts_by_tag(request, slug):
     posts = Post.objects.filter(tags__in=[tag])
     return render(request, 'blog/tag_posts.html', {'tag': tag, 'posts': posts})
 
-class PostsByTagView(ListView):
+class PostByTagView(ListView):
     model = Post
     template_name = "blog/posts_by_tag.html"
     context_object_name = "posts"

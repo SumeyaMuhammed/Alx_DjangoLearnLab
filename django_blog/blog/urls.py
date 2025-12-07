@@ -2,7 +2,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path, include
 from . import views
 from django.views.generic import TemplateView
-from .views import signup, PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView, CommentCreateView, CommentDeleteView, CommentUpdateView, PostsByTagView
+from .views import signup, PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView, CommentCreateView, CommentDeleteView, CommentUpdateView, PostByTagView
 
 urlpatterns = [
     # Custom login page using built-in LoginView
@@ -38,7 +38,7 @@ urlpatterns = [
     path('comment/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment-delete'),
 
     path("search/", views.search_view, name="search"),
-    path("tags/<slug:slug>/", views.posts_by_tag, name="posts_by_tag"),
-    path('tags/<str:tag_name>/', PostsByTagView.as_view(), name='posts-by-tag'),
+    path("tags/<slug:tag_slug>/", views.posts_by_tag, name="posts_by_tag"),
+    path('tags/<str:tag_name>/', PostByTagView.as_view(), name='posts-by-tag'),
 
 ]
