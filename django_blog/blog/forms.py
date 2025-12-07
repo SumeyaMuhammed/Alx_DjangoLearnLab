@@ -1,10 +1,21 @@
 from django import forms
 from .models import Post, Comment, Tag
 
+class TagWidget(forms.TextInput):
+    pass
 class PostForm(forms.ModelForm):
+    tags = forms.CharField(
+        required=False,
+        widget=TagWidget(attrs={'placeholder': 'Enter tags separated by commas'})
+    )
+
     class Meta:
         model = Post
         fields = ['title', 'content', 'tags']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'content': forms.Textarea(attrs={'class': 'form-control'}),
+        }
 
 class CommentForm(forms.ModelForm):
     class Meta:
@@ -16,3 +27,4 @@ class CommentForm(forms.ModelForm):
         if not content:
             raise forms.ValidationError("Comment can't be empty.")
         return content
+    

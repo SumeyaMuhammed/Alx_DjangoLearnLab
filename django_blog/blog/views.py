@@ -48,6 +48,18 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+    
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        tags_input = form.cleaned_data.get("tags", "")
+        tag_names = [t.strip() for t in tags_input.split(",") if t.strip()]
+
+        self.object.tags.clear()
+        for name in tag_names:
+            tag_obj, created = Tag.objects.get_or_create(name=name)
+        self.object.tags.add(tag_obj)
+
+        return response
 
 # Update View
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -59,6 +71,19 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         post = self.get_object()
         return post.author == self.request.user
+    
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        tags_input = form.cleaned_data.get("tags", "")
+        tag_names = [t.strip() for t in tags_input.split(",") if t.strip()]
+
+        self.object.tags.clear()
+        for name in tag_names:
+            tag_obj, created = Tag.objects.get_or_create(name=name)
+        self.object.tags.add(tag_obj)
+
+        return response
+
 
 # Delete View
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
