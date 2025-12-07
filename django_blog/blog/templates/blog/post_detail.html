@@ -1,19 +1,35 @@
 {% extends 'base.html' %}
-
 {% block title %}{{ object.title }}{% endblock %}
 
 {% block content %}
 <h2>{{ object.title }}</h2>
-
 <p>{{ object.content }}</p>
-
 <p><small>By {{ object.author }} • {{ object.created_at|date:"M d, Y" }}</small></p>
 
 {% if user == object.author %}
-    <a href="{% url 'post-edit' object.pk %}">Edit Post</a> |
+    <a href="{% url 'post-update' object.pk %}">Edit Post</a> |
     <a href="{% url 'post-delete' object.pk %}">Delete</a>
 {% endif %}
 
-<br><br>
+<hr>
+
+{# include the comments list partial #}
+{% include 'blog/_comments.html' with post=object %}
+
+<hr>
+
+{# comment creation form: only for authenticated users #}
+{% if user.is_authenticated %}
+    <h3>Leave a comment</h3>
+    <form action="{% url 'comment-create' post_pk=object.pk %}" method="post">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <button type="submit">Post Comment</button>
+    </form>
+{% else %}
+    <p><a href="{% url 'login' %}">Log in</a> to post a comment.</p>
+{% endif %}
+
+<br>
 <a href="{% url 'post-list' %}">⬅ Back to Posts</a>
 {% endblock %}
