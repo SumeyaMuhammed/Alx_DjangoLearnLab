@@ -2,7 +2,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path, include
 from . import views
 from django.views.generic import TemplateView
-from .views import signup, PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView, CommentCreateView, CommentDeleteView, CommentUpdateView, PostByTagView
+from .views import signup, PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView, CommentCreateView, CommentDeleteView, CommentUpdateView, PostByTagListView
 
 urlpatterns = [
     # Custom login page using built-in LoginView
@@ -39,6 +39,6 @@ urlpatterns = [
 
     path("search/", views.search_view, name="search"),
     path("tags/<slug:tag_slug>/", views.posts_by_tag, name="posts_by_tag"),
-    path('tags/<str:tag_name>/', PostByTagView.as_view(), name='posts-by-tag'),
+    path('tags/<str:tag_name>/', PostByTagListView.as_view(), name='posts-by-tag'),
 
 ]
