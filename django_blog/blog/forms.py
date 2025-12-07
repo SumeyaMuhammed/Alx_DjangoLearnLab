@@ -6,7 +6,7 @@ class TagWidget(forms.TextInput):
 class PostForm(forms.ModelForm):
     tags = forms.CharField(
         required=False,
-        widget=TagWidget(attrs={'placeholder': 'Enter tags separated by commas'})
+        widget=TagWidget()
     )
 
     class Meta:
