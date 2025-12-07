@@ -2,9 +2,11 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path, include
 from django.views.generic import TemplateView
 from .views import SignUpView, PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView
+from .views import SignUpView, PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView
 
 urlpatterns = [
     # Custom login page using built-in LoginView
+    path('login/', LoginView.as_view(template_name='blog/login.html'), name='login'),
     path('login/', LoginView.as_view(template_name='blog/login.html'), name='login'),
 
     # Logout page using built-in LogoutView
