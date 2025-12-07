@@ -5,6 +5,8 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from .forms import PostForm
+from django.contrib.auth.decorators import login_required
+
 
 # View for user registration
 def signup(request):
