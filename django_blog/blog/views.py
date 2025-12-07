@@ -5,8 +5,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from .forms import PostForm, CommentForm
 from .models import Post, Comment
+from taggit.models import Tag
 
 # View for user registration
 def signup(request):
@@ -113,3 +115,29 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return reverse('post-detail', kwargs={'pk': self.get_object().post.pk})
+
+def search_view(request):
+    query = request.GET.get("q")
+    results = []
+
+    if query:
+        results = Post.objects.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
+
+    return render(request, 'blog/search_results.html', {'query': query, 'results': results})
+
+def posts_by_tag(request, slug):
+    tag = Tag.objects.get(slug=slug)
+    posts = Post.objects.filter(tags__in=[tag])
+    return render(request, 'blog/tag_posts.html', {'tag': tag, 'posts': posts})
+
+class PostsByTagView(ListView):
+    model = Post
+    template_name = "blog/posts_by_tag.html"
+    context_object_name = "posts"
+
+    def get_queryset(self):
+        return Post.objects.filter(tags__name=self.kwargs['tag_name'])
