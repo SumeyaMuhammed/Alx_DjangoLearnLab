@@ -4,7 +4,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
-from .serializers import UserRegistrationSerializer, UserSerializer
+from .serializers import UserRegistrationSerializer, UserSerializer, FollowActionSerializer
 
 User = get_user_model()
 # User Profile
@@ -29,12 +29,18 @@ class CustomObtainAuthToken(ObtainAuthToken):
         user_data = UserSerializer(token.user).data
         return Response({'token': token.key, 'user': user_data})
 
-class FollowUserView(APIView):
+class FollowUserView(generics.GenericAPIView):
+    serializer_class = FollowActionSerializer
     permission_classes = [permissions.IsAuthenticated]
+    queryset = User.objects.all()
 
-    def post(self, request, user_id):
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data={'user_id': kwargs.get('user_id')})
+        serializer.is_valid(raise_exception=True)
+        user_id = serializer.validated_data['user_id']
+
         try:
-            target = User.objects.get(pk=user_id)
+            target = self.get_queryset().get(pk=user_id)
         except User.DoesNotExist:
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -45,12 +51,18 @@ class FollowUserView(APIView):
         return Response({'status': f'Now following {target.username}'}, status=status.HTTP_200_OK)
 
 
-class UnfollowUserView(APIView):
+class UnfollowUserView(generics.GenericAPIView):
+    serializer_class = FollowActionSerializer
     permission_classes = [permissions.IsAuthenticated]
+    queryset = User.objects.all()
 
-    def post(self, request, user_id):
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data={'user_id': kwargs.get('user_id')})
+        serializer.is_valid(raise_exception=True)
+        user_id = serializer.validated_data['user_id']
+
         try:
-            target = User.objects.get(pk=user_id)
+            target = self.get_queryset().get(pk=user_id)
         except User.DoesNotExist:
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
