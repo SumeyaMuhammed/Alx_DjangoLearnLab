@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 from .serializers import UserRegistrationSerializer, UserSerializer, FollowActionSerializer
 from .models import CustomUser
 
-User = CustomUser
+# User = CustomUser
 # User Profile
 class UserProfileView(generics.RetrieveAPIView):
     serializer_class = UserSerializer
@@ -18,7 +18,7 @@ class UserProfileView(generics.RetrieveAPIView):
 
 # Register new user
 class UserRegistrationView(generics.CreateAPIView):
-    queryset = User.objects.all()
+    queryset = CustomUser.objects.all()
     serializer_class = UserRegistrationSerializer
     permission_classes = [permissions.AllowAny]
 
@@ -33,7 +33,7 @@ class CustomObtainAuthToken(ObtainAuthToken):
 class FollowUserView(generics.GenericAPIView):
     serializer_class = FollowActionSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = User.objects.all()
+    queryset = CustomUser.objects.all()
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data={'user_id': kwargs.get('user_id')})
@@ -55,7 +55,7 @@ class FollowUserView(generics.GenericAPIView):
 class UnfollowUserView(generics.GenericAPIView):
     serializer_class = FollowActionSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = User.objects.all()
+    queryset = CustomUser.objects.all()
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data={'user_id': kwargs.get('user_id')})
