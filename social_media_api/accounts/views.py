@@ -5,8 +5,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
 from .serializers import UserRegistrationSerializer, UserSerializer, FollowActionSerializer
+from .models import CustomUser
 
-User = get_user_model()
+User = CustomUser
 # User Profile
 class UserProfileView(generics.RetrieveAPIView):
     serializer_class = UserSerializer
