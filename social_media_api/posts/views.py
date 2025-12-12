@@ -3,6 +3,7 @@ from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.generics import get_object_or_404
 from .models import Post, Comment, Like
 from notifications.models import Notification
 from .serializers import PostSerializer, CommentSerializer
@@ -61,16 +62,12 @@ class LikePostView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
-        try:
-            post = Post.objects.get(pk=pk)
-        except Post.DoesNotExist:
-            return Response({'error': 'Post not found'}, status=status.HTTP_404_NOT_FOUND)
+        post = get_object_or_404(Post, pk=pk)
 
         like, created = Like.objects.get_or_create(user=request.user, post=post)
         if not created:
             return Response({'error': 'You already liked this post'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Create notification for post author
         if post.author != request.user:
             Notification.objects.create(
                 recipient=post.author,
@@ -85,10 +82,9 @@ class UnlikePostView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
-        try:
-            post = Post.objects.get(pk=pk)
-            like = Like.objects.get(user=request.user, post=post)
+        post = get_object_or_404(Post, pk=pk)  # now uses get_object_or_404
+        like = Like.objects.filter(user=request.user, post=post).first()
+        if like:
             like.delete()
             return Response({'status': 'Post unliked'}, status=status.HTTP_200_OK)
-        except Like.DoesNotExist:
-            return Response({'error': 'You have not liked this post'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': 'You have not liked this post'}, status=status.HTTP_400_BAD_REQUEST)
