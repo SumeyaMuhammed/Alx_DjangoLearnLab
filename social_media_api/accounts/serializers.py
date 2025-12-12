@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 
-User = get_user_model().objects.create_user
+User = get_user_model()
 
 # Serializer for registration
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -17,15 +17,14 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         followers_data = validated_data.pop('followers', [])
-        user = User(
+        user = User.objects.create_user(
             username=validated_data['username'],
             email=validated_data.get('email', ''),
+            password=validated_data['password'],
             bio=validated_data.get('bio', '')
         )
-        user.set_password(validated_data['password'])
-        user.save()
         user.followers.set(followers_data)
-        Token.objects.create(user=user)  # create token on registration
+        Token.objects.create(user=user) 
         return user
 
 # Serializer to display user info including followers
