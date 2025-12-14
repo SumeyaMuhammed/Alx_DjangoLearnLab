@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 import os
 from pathlib import Path
-import dj_database_url  
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -27,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = DEBUG = False
+DEBUG = False
 SECRET_KEY =  os.getenv('DJANGO_SECRET_KEY')
 ALLOWED_HOSTS = ['socialmedia_api.herokuapp.com', 'localhost', '127.0.0.1']
 
@@ -90,7 +89,14 @@ WSGI_APPLICATION = 'social_media_api.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    "default": dj_database_url.parse(os.getenv("DATABASE_URL"))
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "socialmedia_db",
+        "USER": "postgres",
+        "PASSWORD": os.environ.get('DB_PASSWORD'),
+        "HOST": "localhost",
+        "PORT": "5432",
+    }
 }
 
 
