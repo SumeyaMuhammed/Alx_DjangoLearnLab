@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = DEBUG = os.getenv("DEBUG", "False") == "True"
+DEBUG = DEBUG = False
 SECRET_KEY =  os.getenv('DJANGO_SECRET_KEY')
 ALLOWED_HOSTS = ['socialmedia_api.herokuapp.com', 'localhost', '127.0.0.1']
 
